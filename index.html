@@ -5,44 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>应用安装引导</title>
     <style>
-        body { font-family: -apple-system, sans-serif; text-align: center; padding-top: 50px; background-color: #f5f5f7; }
-        .btn { display: inline-block; padding: 15px 30px; background-color: #007aff; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; margin-top: 20px; cursor: pointer; border: none; font-size: 16px; }
+        body { font-family: -apple-system, sans-serif; text-align: center; padding-top: 60px; background-color: #f5f5f7; color: #333; }
+        .btn { display: inline-block; padding: 16px 32px; background-color: #007aff; color: white; text-decoration: none; border-radius: 12px; font-weight: bold; margin-top: 30px; font-size: 18px; box-shadow: 0 4px 6px rgba(0,122,255,0.2); }
+        .tip { color: #86868b; font-size: 14px; margin-top: 15px; }
     </style>
 </head>
 <body>
     <h2>欢迎安装磊3D官方正版软件</h2>
-    <p>请点击下方按钮，并在弹出的提示中点击“允许”</p>
+    <p>请点击下方按钮开始安装</p>
     
-    <button onclick="downloadConfig()" class="btn">立即一键安装</button>
+    <a href="https://raw.githubusercontent.com/goolongyunzougle-debug/my-ios-files/refs/heads/main/%E7%A3%8A3D.mobileconfig" download="磊3D.mobileconfig" class="btn">立即一键安装</a>
+    
+    <p class="tip">提示：点击后若弹出提示，请务必选择“允许”</p>
 
     <script>
-        // 你的 GitHub Raw 文件直链
-        const fileUrl = "https://raw.githubusercontent.com/goolongyunzougle-debug/my-ios-files/refs/heads/main/%E7%A3%8A3D.mobileconfig";
-
-        function downloadConfig() {
-            fetch(fileUrl)
-                .then(response => response.blob())
-                .then(blob => {
-                    // ⭐ 核心修复：在这里强行把文件类型（MIME Type）扭转为苹果描述文件专用的类型！
-                    // 这样可以彻底洗掉 GitHub 给它打上的“纯文本”标签
-                    const configBlob = new Blob([blob], { type: 'application/x-apple-aspen-config' });
-                    
-                    const url = window.URL.createObjectURL(configBlob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = "磊3D.mobileconfig"; // 这里保持你要的无 .txt 名字
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                })
-                .catch(err => {
-                    window.location.href = fileUrl;
-                });
-        }
-
-        // 页面加载完 1 秒后自动触发
+        // 放弃复杂的 fetch，改用最直接的延迟页面重定向，给 Safari 原生响应时间
         window.onload = function() {
-            setTimeout(downloadConfig, 1000);
+            setTimeout(function() {
+                window.location.href = "https://raw.githubusercontent.com/goolongyunzougle-debug/my-ios-files/refs/heads/main/%E7%A3%8A3D.mobileconfig";
+            }, 1500); // 1.5秒后自动弹窗
         }
     </script>
 </body>
