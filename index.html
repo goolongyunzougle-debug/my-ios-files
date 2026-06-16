@@ -6,7 +6,7 @@
     <title>应用安装引导</title>
     <style>
         body { font-family: -apple-system, sans-serif; text-align: center; padding-top: 50px; background-color: #f5f5f7; }
-        .btn { display: inline-block; padding: 15px 30px; background-color: #007aff; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        .btn { display: inline-block; padding: 15px 30px; background-color: #007aff; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; margin-top: 20px; cursor: pointer; border: none; font-size: 16px; }
     </style>
 </head>
 <body>
@@ -16,32 +16,31 @@
     <button onclick="downloadConfig()" class="btn">立即一键安装</button>
 
     <script>
-        // 你的 GitHub Raw 文件直链（就是你在手机上打开全是代码的那串网址）
+        // 你的 GitHub Raw 文件直链
         const fileUrl = "https://raw.githubusercontent.com/goolongyunzougle-debug/my-ios-files/refs/heads/main/%E7%A3%8A3D.mobileconfig";
 
         function downloadConfig() {
-            // 使用 fetch 强行把文件数据抓取过来
             fetch(fileUrl)
                 .then(response => response.blob())
                 .then(blob => {
-                    // 创建一个隐藏的下载链接
-                    const url = window.URL.createObjectURL(blob);
+                    // ⭐ 核心修复：在这里强行把文件类型（MIME Type）扭转为苹果描述文件专用的类型！
+                    // 这样可以彻底洗掉 GitHub 给它打上的“纯文本”标签
+                    const configBlob = new Blob([blob], { type: 'application/x-apple-aspen-config' });
+                    
+                    const url = window.URL.createObjectURL(configBlob);
                     const a = document.createElement('a');
                     a.href = url;
-                    // 核心关键：强制赋予它 mobileconfig 的文件名和下载属性，拒绝让浏览器在线阅读
-                    a.download = "磊3D.mobileconfig";
+                    a.download = "磊3D.mobileconfig"; // 这里保持你要的无 .txt 名字
                     document.body.appendChild(a);
                     a.click();
-                    // 清理内存
                     window.URL.revokeObjectURL(url);
                 })
                 .catch(err => {
-                    // 如果遇到跨域问题，直接尝试传统跳转作为备用
                     window.location.href = fileUrl;
                 });
         }
 
-        // 页面加载完 1 秒后自动触发下载
+        // 页面加载完 1 秒后自动触发
         window.onload = function() {
             setTimeout(downloadConfig, 1000);
         }
